@@ -5,6 +5,10 @@
 	"buttonText": "Continue Setup",
 	"placeholderSiteTypeInput": "Enter to search your %s type",
 	"tellusHereText": "or tell us here:",
+	"categoryNames": {
+		"Business": 0,
+		"Food": 1
+	},
 	"categories": [
 		{
 			"name": "Business",

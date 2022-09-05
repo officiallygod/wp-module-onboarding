@@ -24,8 +24,39 @@
 	
 				.category-scrolling-wrapper {
 					width: 15vw;
+					padding: 5px;
 					display: flex;
-					justify-content: center;
+					place-content: center;
+					justify-content: space-between;
+
+					&_left-btn {
+						display: flex;
+						align-items: center;
+						justify-content: flex-start;
+
+						&-icon {
+							width: 12px;
+							height: 12px;
+							background-repeat: no-repeat;
+						}
+					}
+
+					&_type {
+						display: flex;
+						place-content: center;
+					}
+
+					&_right-btn {
+						display: flex;
+						align-items: center;
+						justify-content: flex-end;
+
+						&-icon {
+								width: 12px;
+								height: 12px;
+								background-repeat: no-repeat;
+						}
+					}
 				}
 			}
 	

@@ -12,7 +12,7 @@ import content from '../content.json';
 import { translations } from '../../../../../utils/locales/translations';
 
 
-const StepPrimarySetup = () => {
+const StepSecondarySetup = () => {
 	const { setDrawerActiveView, setIsSidebarOpened, setIsDrawerSuppressed } = useDispatch(
 		nfdOnboardingStore
 	);
@@ -36,9 +36,10 @@ const StepPrimarySetup = () => {
 		};
 	}, []);
 
+	const selectedPrimaryCatInStoreIndex = content?.categoryNames[currentData?.data?.siteType?.primary] ?? 0;
 	const selectedCategoryInStore = currentData?.data?.siteType?.secondary;
-	const categoriesArray = content.categories;
-	const subCategories = categoriesArray[0]?.subCategories;
+	const categoriesArray = content?.categories[ selectedPrimaryCatInStoreIndex ];
+	const subCategories = categoriesArray?.subCategories;
 
 	/**This condition fills the data in input box if the saved category isn't a subcategory from the content*/
 	if (selectedCategoryInStore && !inputCategVal && subCategories.indexOf(selectedCategoryInStore) === -1) {
@@ -60,7 +61,7 @@ const StepPrimarySetup = () => {
 		changeCategory(idxOfElm);
 		changeInputCateg('');
 		const currentDataCopy = currentData;
-		currentDataCopy.data.siteType['secondary'] = categoriesArray[0]?.subCategories[idxOfElm];
+		currentDataCopy.data.siteType['secondary'] = categoriesArray?.subCategories[idxOfElm];
 		setCurrentOnboardingData(currentDataCopy);
 	}
 
@@ -78,14 +79,22 @@ const StepPrimarySetup = () => {
 				<div className='nfd-setup-secondary-categories'>
 					<div className='nfd-card-category-wrapper'>
 						<div className="category-scrolling-wrapper">
-							<span className="icon" style={{ backgroundImage: categoriesArray[0].icon }} />
-							<p className="categName"> {categoriesArray[0].name}</p>
+							<div className="category-scrolling-wrapper_left-btn">
+								<span className="category-scrolling-wrapper_left-btn-icon" style={{ backgroundImage: "var(--chevron-left-icon)" }} />
+							</div>
+							<div className="category-scrolling-wrapper_type">
+								<span className="icon" style={{ backgroundImage: categoriesArray.icon }} />
+								<p className="categName"> {categoriesArray.name}</p>
+							</div>
+							<div className="category-scrolling-wrapper_right-btn">
+								<span className="category-scrolling-wrapper_right-btn-icon" style={{ backgroundImage: "var(--chevron-right-icon)" }} />
+							</div>
 						</div>
 					</div>
 
 					<div className='subCategoriesSection'>
 						{
-							categoriesArray[0]?.subCategories?.map((item, idx) => {
+							categoriesArray?.subCategories?.map((item, idx) => {
 								return <span
 									key={item}
 									onClick={(e) => handleCategoryClick(idx)}
@@ -121,5 +130,5 @@ const StepPrimarySetup = () => {
 	);
 };
 
-export default StepPrimarySetup;
+export default StepSecondarySetup;
 
