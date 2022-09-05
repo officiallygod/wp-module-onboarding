@@ -24,7 +24,7 @@ const StepSecondarySetup = () => {
 	}, []);
 
 	const [isLoaded, setIsLoaded] = useState(false);
-	const [primaryType, setPrimaryType] = useState('');
+	const [primaryType, setPrimaryType] = useState(content?.categories[0]?.name);
 	const [clickedIndex, changeCategory] = useState(-1);
 	const [inputCategVal, changeInputCateg] = useState('');
 	const [categoriesArray, setCategoriesArray] = useState(content?.categories[0]);
@@ -46,7 +46,9 @@ const StepSecondarySetup = () => {
 
 	if(!isLoaded)
 	{
-		setPrimaryType(currentData?.data?.siteType?.primary);
+		if (currentData?.data?.siteType?.primary != "")
+			setPrimaryType(currentData?.data?.siteType?.primary);
+
 		setCategoriesArray(categories);
 		subCategories = categoriesArray?.subCategories;
 		setIsLoaded(true);
@@ -132,10 +134,16 @@ const StepSecondarySetup = () => {
 					<div className='subCategoriesSection'>
 						{
 							categoriesArray?.subCategories?.map((item, idx) => {
+								var isSecondarySelectedType = false;
+								if ( clickedIndex === idx || item === selectedCategoryInStore ){
+									// Checks if the One in store is same as the one selected
+									if (currentData?.data?.siteType?.primary == primaryType)
+										isSecondarySelectedType = true;
+								}
 								return <span
 									key={item}
 									onClick={(e) => handleCategoryClick(idx)}
-									className={`${(clickedIndex === idx || item === selectedCategoryInStore) ? 'chosenSecondaryCategory ' : ''}nfd-card-category`}>
+									className={`${(isSecondarySelectedType) ? 'chosenSecondaryCategory ' : ''}nfd-card-category`}>
 									{item}
 								</span>
 							})
