@@ -23,8 +23,11 @@ const StepSecondarySetup = () => {
 		setDrawerActiveView(VIEW_NAV_GET_STARTED);
 	}, []);
 
+	const [isLoaded, setIsLoaded] = useState(false);
+	const [primaryType, setPrimaryType] = useState('');
 	const [clickedIndex, changeCategory] = useState(-1);
 	const [inputCategVal, changeInputCateg] = useState('');
+	const [categoriesArray, setCategoriesArray] = useState(content?.categories[0]);
 
 
 	const { setCurrentOnboardingData } = useDispatch(nfdOnboardingStore);
@@ -36,15 +39,23 @@ const StepSecondarySetup = () => {
 		};
 	}, []);
 
-	const selectedPrimaryCatInStoreIndex = content?.categoryNames[currentData?.data?.siteType?.primary] ?? 0;
-	const selectedCategoryInStore = currentData?.data?.siteType?.secondary;
-	const categoriesArray = content?.categories[ selectedPrimaryCatInStoreIndex ];
-	const subCategories = categoriesArray?.subCategories;
+	var selectedPrimaryCatInStoreIndex = content?.categoryNames[currentData?.data?.siteType?.primary] ?? 0;
+	var categories = content?.categories[selectedPrimaryCatInStoreIndex];
+	var selectedCategoryInStore = currentData?.data?.siteType?.secondary;
+	var subCategories = categoriesArray?.subCategories;
 
-	/**This condition fills the data in input box if the saved category isn't a subcategory from the content*/
+	if(!isLoaded)
+	{
+		setPrimaryType(currentData?.data?.siteType?.primary);
+		setCategoriesArray(categories);
+		subCategories = categoriesArray?.subCategories;
+		setIsLoaded(true);
+	}
+
+	/** This condition fills the data in input box if the saved category isn't a subcategory from the content*/
 	if (selectedCategoryInStore && !inputCategVal && subCategories.indexOf(selectedCategoryInStore) === -1) {
-		if (selectedCategoryInStore !== 'secondaryCategory')
-		 changeInputCateg(selectedCategoryInStore);
+		if (selectedCategoryInStore !== 'secondaryCategory'){
+			changeInputCateg(selectedCategoryInStore);
 	}
 
 	/** Function which saves data in redux when category name is put-in via input box */
@@ -52,6 +63,7 @@ const StepSecondarySetup = () => {
 		changeCategory(-1);
 		changeInputCateg(input?.target?.value);
 		const currentDataCopy = currentData;
+		currentDataCopy.data.siteType['primary'] = primaryType;
 		currentDataCopy.data.siteType['secondary'] = input?.target?.value;
 		setCurrentOnboardingData(currentDataCopy);
 	}
@@ -61,8 +73,29 @@ const StepSecondarySetup = () => {
 		changeCategory(idxOfElm);
 		changeInputCateg('');
 		const currentDataCopy = currentData;
+		currentDataCopy.data.siteType['primary'] = primaryType;
 		currentDataCopy.data.siteType['secondary'] = categoriesArray?.subCategories[idxOfElm];
 		setCurrentOnboardingData(currentDataCopy);
+	}
+
+	const changedPrimaryPrev = () => {
+		selectedPrimaryCatInStoreIndex -= 1;
+
+		if (selectedPrimaryCatInStoreIndex == -1) 
+			selectedPrimaryCatInStoreIndex = content?.categories.length - 1;
+
+		setPrimaryType(content?.categories[selectedPrimaryCatInStoreIndex]?.name);
+		setCategoriesArray(content?.categories[ selectedPrimaryCatInStoreIndex ]);
+	}
+
+	const changedPrimaryNext = () => {
+
+		selectedPrimaryCatInStoreIndex += 1;
+		if (selectedPrimaryCatInStoreIndex == content?.categories.length )
+			selectedPrimaryCatInStoreIndex = 0;
+
+		setPrimaryType(content?.categories[selectedPrimaryCatInStoreIndex]?.name);
+		setCategoriesArray(content?.categories[ selectedPrimaryCatInStoreIndex ]);
 	}
 
 	return (
@@ -80,14 +113,18 @@ const StepSecondarySetup = () => {
 					<div className='nfd-card-category-wrapper'>
 						<div className="category-scrolling-wrapper">
 							<div className="category-scrolling-wrapper_left-btn">
-								<span className="category-scrolling-wrapper_left-btn-icon" style={{ backgroundImage: "var(--chevron-left-icon)" }} />
+								<span className="category-scrolling-wrapper_left-btn-icon" 
+									onClick={changedPrimaryPrev}
+									style={{ backgroundImage: "var(--chevron-left-icon)" }} />
 							</div>
 							<div className="category-scrolling-wrapper_type">
 								<span className="icon" style={{ backgroundImage: categoriesArray.icon }} />
 								<p className="categName"> {categoriesArray.name}</p>
 							</div>
 							<div className="category-scrolling-wrapper_right-btn">
-								<span className="category-scrolling-wrapper_right-btn-icon" style={{ backgroundImage: "var(--chevron-right-icon)" }} />
+								<span className="category-scrolling-wrapper_right-btn-icon"
+									onClick={changedPrimaryNext}
+									style={{ backgroundImage: "var(--chevron-right-icon)" }} />
 							</div>
 						</div>
 					</div>
