@@ -54,7 +54,7 @@ const StepSecondarySetup = () => {
 
 	/** This condition fills the data in input box if the saved category isn't a subcategory from the content*/
 	if (selectedCategoryInStore && !inputCategVal && subCategories.indexOf(selectedCategoryInStore) === -1) {
-		if (selectedCategoryInStore !== 'secondaryCategory'){
+		if (selectedCategoryInStore !== 'secondaryCategory')
 			changeInputCateg(selectedCategoryInStore);
 	}
 
