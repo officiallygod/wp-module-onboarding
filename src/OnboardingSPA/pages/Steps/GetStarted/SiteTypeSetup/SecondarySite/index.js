@@ -60,7 +60,7 @@ const StepSecondarySetup = () => {
 		var foundMatchInCategories = false;
 
 		content.categories.forEach( category => {
-			if (category?.subCategories.indexOf(selectedCategoryInStore) === -1)
+			if (category?.subCategories.indexOf(selectedCategoryInStore) != -1)
 				foundMatchInCategories = true;
 		});
 
